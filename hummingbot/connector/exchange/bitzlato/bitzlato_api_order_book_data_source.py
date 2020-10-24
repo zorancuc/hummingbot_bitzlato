@@ -154,7 +154,7 @@ class BitzlatoAPIOrderBookDataSource(OrderBookTrackerDataSource):
     async def listen_for_trades(self, ev_loop: asyncio.BaseEventLoop, output: asyncio.Queue):
         while True:
             try:
-                ws_path: str = "/?stream=".join([f"{convert_to_exchange_trading_pair(trading_pair).lower()}.trade" for trading_pair in self._trading_pairs])
+                ws_path: str = "/?=".join([f"{convert_to_exchange_trading_pair(trading_pair).lower()}.trade" for trading_pair in self._trading_pairs])
                 stream_url: str = f"{DIFF_STREAM_URL}/{ws_path}"
 
                 async with websockets.connect(stream_url) as ws:
