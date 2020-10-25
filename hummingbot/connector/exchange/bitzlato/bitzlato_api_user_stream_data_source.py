@@ -16,8 +16,8 @@ from hummingbot.core.utils.async_utils import safe_ensure_future
 from bitzlato.client import Client as BitzlatoClient
 from hummingbot.logger import HummingbotLogger
 
-BINANCE_API_ENDPOINT = "https://api.bitzlato.com/api/v1/"
-BINANCE_USER_STREAM_ENDPOINT = "userDataStream"
+BITZLATO_API_ENDPOINT = "https://www.bitzlato.dev/api/v2/peatio/public/"
+BITZLATO_USER_STREAM_ENDPOINT = "userDataStream"
 
 
 class BitzlatoAPIUserStreamDataSource(UserStreamTrackerDataSource):
@@ -46,7 +46,7 @@ class BitzlatoAPIUserStreamDataSource(UserStreamTrackerDataSource):
 
     async def get_listen_key(self):
         async with aiohttp.ClientSession() as client:
-            async with client.post(f"{BINANCE_API_ENDPOINT}{BINANCE_USER_STREAM_ENDPOINT}",
+            async with client.post(f"{BITZLATO_API_ENDPOINT}{BITZLATO_USER_STREAM_ENDPOINT}",
                                    headers={"X-MBX-APIKEY": self._bitzlato_client.API_KEY}) as response:
                 response: aiohttp.ClientResponse = response
                 if response.status != 200:
@@ -56,7 +56,7 @@ class BitzlatoAPIUserStreamDataSource(UserStreamTrackerDataSource):
 
     async def ping_listen_key(self, listen_key: str) -> bool:
         async with aiohttp.ClientSession() as client:
-            async with client.put(f"{BINANCE_API_ENDPOINT}{BINANCE_USER_STREAM_ENDPOINT}",
+            async with client.put(f"{BITZLATO_API_ENDPOINT}{BITZLATO_USER_STREAM_ENDPOINT}",
                                   headers={"X-MBX-APIKEY": self._bitzlato_client.API_KEY},
                                   params={"listenKey": listen_key}) as response:
                 data: [str, any] = await response.json()
@@ -94,7 +94,7 @@ class BitzlatoAPIUserStreamDataSource(UserStreamTrackerDataSource):
                 yield msg
 
     async def get_ws_connection(self) -> websockets.WebSocketClientProtocol:
-        stream_url: str = f"wss://stream.bitzlato.com:9443/ws/{self._current_listen_key}"
+        stream_url: str = f"wss://www.bitzlato.dev/api/v2/ranger/public/{self._current_listen_key}"
         self.logger().info(f"Reconnecting to {stream_url}.")
 
         # Create the WS connection.
